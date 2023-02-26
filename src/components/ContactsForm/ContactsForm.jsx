@@ -10,8 +10,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import 'yup-phone';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/contactsSlice';
-import { getContacts } from 'redux/selectors';
+import { addContact } from 'redux/operations';
+import { selectContacts } from 'redux/selectors';
 
 // Validation Schema
 const schema = Yup.object().shape({
@@ -26,12 +26,15 @@ const schema = Yup.object().shape({
 // Form
 const ContactsForm = () => {
   const dispatch = useDispatch();
-  const allContacts = useSelector(getContacts);
+  const constacts = useSelector(selectContacts);
+  // console.log(constacts);
   const handleSubmit = (values, { resetForm }) => {
     const { name, number } = values;
     const contactData = { name, number };
-    if (allContacts.some(item => item.name === name)) {
-      return alert('You have the same contact already  ');
+    if (constacts.some(item => item.name === name)) {
+      alert('You have the same contact already  ');
+      resetForm();
+      return;
     }
     dispatch(addContact(contactData));
 
@@ -47,7 +50,7 @@ const ContactsForm = () => {
       validationSchema={schema}
       onSubmit={handleSubmit}
     >
-      <Container autoComplete="off">
+      <Container autoComplete="on">
         <div>
           <Label>
             Name

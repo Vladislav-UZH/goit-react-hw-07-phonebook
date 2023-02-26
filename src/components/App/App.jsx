@@ -8,14 +8,21 @@ import Notification from 'components/Notification';
 import { BsPencilFill } from 'react-icons/bs';
 // styles
 import { AddContactsBtn } from '../Button/Button.styled';
-import { useSelector } from 'react-redux';
-import { getContacts } from 'redux/selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectContacts } from 'redux/selectors';
+import { fetchContacts } from 'redux/operations';
+import { useEffect } from 'react';
 
 //___APP___
 
 export const App = () => {
-  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
+  // console.log(contacts);
   const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   const toggleContactBar = () => {
     setIsOpen(!isOpen);
